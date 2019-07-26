@@ -1,0 +1,206 @@
+{% extends 'home/base.html' %}
+
+{% block head %}
+<style>
+    body { 
+    padding-top: 80px; 
+    }
+</style>
+{% endblock %}
+
+{% block body %}
+  <!-- Navbar -->
+  <nav class="navbar fixed-top navbar-expand-lg navbar-light white scrolling-navbar">
+    <div class="container">
+
+      <!-- Brand -->
+      <a class="navbar-brand waves-effect" href="{% url 'home' %}">
+        <strong class="blue-text">Women's Paradise</strong>
+      </a>
+
+      <!-- Collapse -->
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <!-- Links -->
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+
+        <!-- Left -->
+        <ul class="navbar-nav mr-auto">
+         <li> <div class="dropdown">
+
+  <!--Trigger-->
+  <button class="btn btn-md dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown"
+    aria-haspopup="true" aria-expanded="false">Categories</button>
+
+  <!--Menu-->
+  <div class="dropdown-menu dropdown-primary">
+  {% for category in categories %}
+    <a class="dropdown-item" href="#">{{category}}</a>
+   {% endfor %}
+  </div>
+</div> </li>
+           <li>
+    <form class="form-inline mr-auto mt-2 ml-2">
+        <input class="form-control mr-sm-2" type="text" placeholder="Search" aria-label="Search">
+        <button class="btn blue-gradient btn-rounded btn-md my-0" type="submit">Search</button>
+    </form>
+    </li>
+        </ul>
+
+        <!-- Right -->
+        <ul class="navbar-nav nav-flex-icons">
+        
+          <li class="nav-item">
+              {% if not request.user.is_authenticated %}
+              <a type="button" class="btn btn-gplus" href="{% url 'social:begin' 'google-oauth2' %}"><i class="fab fa-google-plus-g pr-1"></i> SignIn with Google </a>
+             {% else %}
+             <a type="button" class="btn btn-danger" href="{% url 'logout' %}"> Logout </a>
+              {% endif %} 
+   
+             </li>
+             {% if  request.user.is_authenticated %}
+             <li class="nav-item">
+               <a class="nav-link waves-effect" href="{% url 'cart' %}">
+                 <span class="badge red z-depth-1 mr-1"> {{ user.buyer.cart_set.first.qty.count }} </span>
+                 <i class="fas fa-shopping-cart"></i>
+                 <span class="clearfix d-none d-sm-inline-block"> Cart </span>
+               </a>
+             </li>
+             {% endif %}
+         
+        </ul>
+
+      </div>
+
+    </div>
+  </nav>
+  <!-- Navbar -->
+
+  <main>   
+      <a type=button" class="btn btn-secondary ml-5 mt-2" href="{% url 'checkout' %}">Proceed To Checkout: {{ user.buyer.cart_set.first.qty.count }}</a> 
+    <div class="container mt-4">
+
+      <section class="text-center mb-2">
+
+        <!--Grid row-->
+        <div class="row">
+
+          <!--Grid column-->
+          {% for product in products %}
+          <div class="col-lg-3 col-md-6 mb-4">
+
+            <!--Card-->
+            <div class="card">
+            
+              <!--Card image-->
+              <div class="view overlay">
+                <img src="{{ product.product.img.url }}" class="card-img-top"
+                  alt="">
+                <a>
+                  <div class="mask rgba-white-slight"></div>
+                </a>
+              </div>
+              <!--Card image-->
+
+              <!--Card content-->
+              <div class="card-body text-center">
+                <!--Category & Title-->
+                <a href="" class="grey-text">
+                  <h5></h5>
+                </a>
+                <h5>
+                  <strong>
+                    <a href="{% url 'product_view' product.product.pk %}" class="dark-grey-text">{{ product.product.name }}
+                      <span class="badge badge-pill danger-color">NEW</span>
+                    </a>
+                    {% if product.product.stock %}
+                    <span class="badge badge-pill primary-color">InStock</span>
+                    {% else %}
+                    <span class="badge badge-pill danger-color">NoStock</span>
+                    {% endif %}
+                  </strong>
+                </h5>
+
+                <h4 class="font-weight-bold blue-text">
+                  <strong>₹{{ product.product.price }}</strong> <br> <br>
+                  <strong style="color:black;"> Quantity :</strong> {{product.qty}}
+                </h4>
+                <a class="btn purple-gradient" href="{% url 'checkout' %}">Checkout</a>
+                <a href="{% url 'cart_remove' product.product.pk %}"><button type="button" class="btn btn-danger">Remove</button></a>
+              </div>
+              <!--Card content-->
+
+            </div>
+            <!--Card-->
+
+          </div>
+          {% endfor %}
+          <!--Grid column-->
+          
+          <!--Fourth column-->
+        </div>
+        <!--Grid row-->
+
+      </section>
+      <!--Section: Products v.3-->
+
+      <!--Pagination-->
+
+      <!--Pagination-->
+
+    </div>
+  </main>
+  <!--Main layout-->
+
+  <!--Footer-->
+  <footer class="page-footer text-center font-small mt-4 wow fadeIn">
+
+    <!--Call to action-->
+
+    <!--/.Call to action-->
+
+    <hr class="my-4">
+
+    <!-- Social icons -->
+    <div class="pb-4">
+      <a href="https://www.facebook.com/mdbootstrap" target="_blank">
+        <i class="fab fa-facebook-f mr-3"></i>
+      </a>
+
+      <a href="https://twitter.com/MDBootstrap" target="_blank">
+        <i class="fab fa-twitter mr-3"></i>
+      </a>
+
+      <a href="https://www.youtube.com/watch?v=7MUISDJ5ZZ4" target="_blank">
+        <i class="fab fa-youtube mr-3"></i>
+      </a>
+
+      <a href="https://plus.google.com/u/0/b/107863090883699620484" target="_blank">
+        <i class="fab fa-google-plus-g mr-3"></i>
+      </a>
+
+      <a href="https://dribbble.com/mdbootstrap" target="_blank">
+        <i class="fab fa-dribbble mr-3"></i>
+      </a>
+
+      <a href="https://pinterest.com/mdbootstrap" target="_blank">
+        <i class="fab fa-pinterest mr-3"></i>
+      </a>
+
+      <a href="https://github.com/mdbootstrap/bootstrap-material-design" target="_blank">
+        <i class="fab fa-github mr-3"></i>
+      </a>
+
+      <a href="http://codepen.io/mdbootstrap/" target="_blank">
+        <i class="fab fa-codepen mr-3"></i>
+      </a>
+    </div>
+    <!-- Social icons -->
+
+    <!--Copyright-->
+
+
+{% endblock %}

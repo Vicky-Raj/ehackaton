@@ -1,0 +1,259 @@
+{% extends 'home/base.html' %}
+
+{% block head %}
+<style>
+.ibtn{
+	background: none;
+	color: inherit;
+	border: none;
+	padding: 0;
+	font: inherit;
+	cursor: pointer;
+	outline: inherit;
+}
+.ibtn:focus{
+    outline: 0;
+}
+.ibtn:focus{
+    outline: none;
+}
+.avatar2{
+    width: 33px;
+    height: 33px;
+    border-radius: 80%;
+  }
+</style>
+
+<script>
+function rate(str){
+
+  for(var i=1;i<=5;i++){
+    let star = document.getElementById(`str-${i}`)
+    star.children[0].style.color = 'grey';
+  }
+  var limit = str.split('-')[1]
+  for(var i=1;i<=limit;i++){
+    let star = document.getElementById(`str-${i}`)
+    star.children[0].style.color = 'gold';
+  }
+  document.getElementById("rating").setAttribute("value",limit);
+
+}
+</script>
+{% endblock %}
+
+{% block body %}
+
+<nav class="navbar fixed-top navbar-expand-lg navbar-light white scrolling-navbar">
+        <div class="container">
+    
+          <!-- Brand -->
+          <a class="navbar-brand waves-effect" href="{% url 'home' %}">
+            <strong class="blue-text">Women's Paradise</strong>
+          </a>
+    
+          <!-- Collapse -->
+          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+    
+          <!-- Links -->
+          <div class="collapse navbar-collapse" id="navbarSupportedContent">
+    
+            <!-- Left -->
+            <ul class="navbar-nav mr-auto">
+        <li> <div class="dropdown">
+    
+      <!--Trigger-->
+      <button class="btn btn-md dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown"
+        aria-haspopup="true" aria-expanded="false">Categories</button>
+    
+      <div class="dropdown-menu dropdown-primary">
+        {% for category in categories %}
+        <a class="dropdown-item" href="#">{{category}}</a>
+        {% endfor %}
+      </div>
+    </div> 
+    </li>
+    <li>
+    <form class="form-inline mr-auto mt-2 ml-2">
+        <input class="form-control mr-sm-2" type="text" placeholder="Search" aria-label="Search">
+        <button class="btn blue-gradient btn-rounded btn-md my-0" type="submit">Search</button>
+    </form>
+    </li>
+    </ul>
+            <!-- Right -->
+            <ul class="navbar-nav nav-flex-icons">
+              <li class="nav-item">
+         
+              <li class="nav-item">
+                  {% if not request.user.is_authenticated %}
+                  <a type="button" class="btn btn-gplus" href="{% url 'social:begin' 'google-oauth2' %}"><i class="fab fa-google-plus-g pr-1"></i> SignIn with Google </a>
+                 {% else %}
+                 <a type="button" class="btn btn-danger" href="{% url 'logout' %}"> Logout </a>
+                  {% endif %} 
+       
+                 </li>
+                 {% if  request.user.is_authenticated %}
+                 <li class="nav-item">
+                   <a class="nav-link waves-effect" href="{% url 'cart' %}">
+                     <span class="badge red z-depth-1 mr-1"> {% if request.user.buyer %} {{ user.buyer.cart_set.first.qty.count }} {% endif %}</span>
+                     <i class="fas fa-shopping-cart"></i>
+                     <span class="clearfix d-none d-sm-inline-block"> Cart </span>
+                   </a>
+                 </li>
+                 {% endif %}
+         
+            
+            </ul>
+    
+          </div>
+    
+        </div>
+      </nav>
+    
+      <!--Main layout-->
+      <main class="mt-5 pt-4">
+        <div class="container dark-grey-text mt-5">
+    
+          <!--Grid row-->
+          <div class="row wow fadeIn">
+    
+            <!--Grid column-->
+            <div class="col-md-6 mb-4">
+    
+              <img src="{{ product.img.url }}" class="img-fluid" alt="">
+    
+            </div>
+            <!--Grid column-->
+    
+            <!--Grid column-->
+            <div class="col-md-6 mb-4">
+    
+              <!--Content-->
+              <div class="p-4">
+    
+                <h1>
+                  {{ product.name }}
+                  {% if request.user.seller  == product.seller  %}
+                  <a class="btn btn-primary" href="{% url 'edit-product' product.pk %}"> Edit</a>
+                  <a class="btn btn-danger" href="{% url 'delete' product.pk %}"> Delete </a>
+                   {% endif %} 
+                </h1>
+              
+                <b>Rating:</b>
+                {% if not request.user.seller %}
+                <div class="mt-2">
+                  <i class="material-icons" style="font-size:28px;color:gold">star</i>
+                  <i class="material-icons" style="font-size:28px;color:gold">star</i>
+                  <i class="material-icons" style="font-size:28px;color:gold;">star</i>
+                  <i class="material-icons" style="font-size:28px;color:gold;">star</i>
+                  <i class="material-icons" style="font-size:28px;color:gold;">star</i>
+                </div>
+                {% endif %}
+                <div class="mb-3">
+                  {% for category in product.category_set.all %}
+                  <a href="">
+                    <span class="badge purple mr-1">{{ category.category }}</span>
+                  </a>
+                  {% endfor %}
+                </div>
+  
+                <p class="lead">
+                  <span>₹{{ product.price }}</span>
+                </p>
+    
+                <p class="lead font-weight-bold">Description</p>
+    
+                <p>{{ product.description }}</p>
+    
+                <h4>
+                  <strong>Sold By:</strong>{{ product.seller.user.username }}<br>
+                  <strong>Contact Us:</strong>{{ product.seller.address }}
+                </h4>
+
+                <div class="mt-4"></div>
+                {% if not in_cart %}
+                <form class="d-flex justify-content-left" method="POST" action="{% url 'cart' %}">
+                  {% csrf_token %}
+                  <!-- Default input -->
+                  <input type="number" value="1" aria-label="Search" class="form-control" style="width: 100px" name="qty">
+                  <button class="btn btn-primary btn-md my-0 p" type="submit">Add to cart
+                    <i class="fas fa-shopping-cart ml-1"></i>
+                  </button>
+                  <input type="number" value="{{ product.pk }}" name="pk" style="visibility: hidden;">
+                </form>
+                {% else %}
+                <button type="button" class="btn btn-danger btn-lg" disabled>In Cart</button>
+                {% endif %}
+              </div>
+              <!--Content-->
+    
+            </div>
+            <!--Grid column-->
+    
+          </div>
+          <!--Grid row-->
+    <br>
+        <h4>Reviews:</h4>
+        <form  method="POST" action="{% url 'review-view' product.pk %}">
+          {% csrf_token %}
+        <div class="mt-2">
+          <button type="button" class="ibtn" id="str-1" onclick="rate('str-1')">
+            <i class="material-icons" style="font-size:28px;color:gold">star</i>
+          </button> 
+          <button type="button" class="ibtn" id="str-2" onclick="rate('str-2')">
+            <i class="material-icons" style="font-size:28px;color:gold">star</i>
+          </button> 
+          <button type="button" class="ibtn" id="str-3" onclick="rate('str-3')">
+            <i class="material-icons" style="font-size:28px;color:gold;">star</i>
+          </button> 
+          <button type="button" class="ibtn" id="str-4" onclick="rate('str-4')">
+            <i class="material-icons" style="font-size:28px;color:gold;">star</i>
+          </button> 
+          <button type="button" class="ibtn" id="str-5" onclick="rate('str-5')">
+            <i class="material-icons" style="font-size:28px;color:gold;">star</i>
+          </button> 
+          </div>
+        <textarea id="textarea" class="form-control mb-1" cols="10" rows="5" placeholder="Write your thoughts" name="review"></textarea>
+        <button type="submit" class="btn btn-success">Submit</button>
+        <input type="number" value=5 id="rating" name="rating" style="display: none">
+        </form>
+
+        {% for rating in product.ratings.all %}
+        <div class="card mb-5" style="width: 70rem">
+          
+            <!-- Card content -->
+            <div class="card-body">
+          
+              <!-- Title -->
+              <h4 class="card-title"><img src="https://cdn.pixabay.com/photo/2016/08/08/09/17/avatar-1577909__340.png" class="avatar2"><a class="ml-2">{{ rating.user.username }}</a></h4>
+
+              {% for x in 'xxxxx' %}
+              
+              {% if forloop.counter > rating.rating %}
+              <i class="material-icons" style="font-size:28px;color:gray">star</i>
+              {% else %}
+              <i class="material-icons" style="font-size:28px;color:gold">star</i>
+              {% endif %}
+
+              {% endfor %}
+
+              <p class="card-text">{{ rating.review }}</p>
+              <!-- Button -->
+          
+            </div>
+          
+          </div>
+        {% endfor %}
+      </main>
+      <!--Main layout-->
+    
+      <!--Footer-->
+      
+      <!--/.Footer-->
+      <script>
+          new WOW().init();
+      </script>
+{% endblock %}

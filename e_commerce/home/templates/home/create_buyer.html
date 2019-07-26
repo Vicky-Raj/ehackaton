@@ -1,0 +1,23 @@
+{% extends 'home/base.html' %}
+
+{% block head %}
+<style>
+body{
+    padding-top: 70px;
+}
+</style>
+{% endblock %}
+{% block body %}
+
+<div class="container" style="padding-top: 10px;">
+
+        <form class="text-center border border-light p-5" action="{% url 'create-buyer' %}" method="POST">
+                {% csrf_token %}
+                <input type="text" id="defaultRegisterFormFirstName" class="form-control" placeholder="Phone Number" name="phone_num"> <br>
+                <input type="text" id="defaultadrressFormFirstName" class="form-control" placeholder="Address" name="address"> <br>
+                <button class ="btn btn-primary" type="submit"> Submit </button> 
+    </form>
+
+</div>
+
+{% endblock %}

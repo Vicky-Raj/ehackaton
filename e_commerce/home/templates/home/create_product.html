@@ -1,0 +1,36 @@
+{% extends 'home/base.html' %}
+
+{% block head %}
+<style>
+body{
+    padding-top: 70px;
+}
+</style>
+{% endblock %}
+{% block body %}
+
+<div class="container" style="padding-top: 10px;">
+
+        <form class="text-center border border-light p-5" action="{% url 'create-product' %}" method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div style="text-align: center">
+                    <input type="file"   class="btn btn-primary" name="image"> 
+
+                </div>
+                <h3> Name </h3> <br>
+                <input type="text" id="defaultRegisterFormFirstName" class="form-control" placeholder="Name" name="name"> <br>
+                <h3> Description </h3> <br>
+                <textarea name="description" id="desc" cols="10" rows="10" class="form-control mb-4"></textarea> <br>
+                <h3> Price</h3> <br>
+                <input type="text" name="price" placeholder="price" class="form-control"><br>
+                <h3> Category</h3> <br>
+                <input type="text" name="category" placeholder="Category" class="form-control"><br>
+                <h3> Quantity</h3> <br>
+                <input type="text" name="quantity" placeholder="Quantity" class="form-control"><br>
+
+                <button class ="btn btn-primary" type="submit"> Submit </button> 
+    </form>
+
+</div>
+
+{% endblock %}

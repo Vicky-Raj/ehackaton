@@ -1,0 +1,85 @@
+{% extends 'home/base.html' %}
+
+{% block head %}
+<style>
+body{
+    padding-top: 50px;
+}
+</style>
+
+{% endblock %}
+
+{% block body %}
+  <!-- Navbar -->    <!-- Navbar -->
+    
+      <!--Main layout-->
+      <main class="mt-5 pt-4">
+
+            <!--Grid column-->
+    
+            <!--Grid column-->
+            <div class="col-md-12 mb-10">
+    
+              <!-- Heading -->
+              <h4 class="d-flex justify-content-between align-items-center mb-3">
+                <span class="text-muted">Your cart</span>
+                <span class="badge badge-secondary badge-pill">{{user.buyer.cart_set.first.qty.count}}</span>
+              </h4>
+    
+              <ul class="list-group mb-3 z-depth-1">
+                {% for qty in qtys %}
+                <li class="list-group-item d-flex justify-content-between lh-condensed">
+                  <div>
+                    <h6 class="my-0">{{ qty.product.name }}</h6>
+                    <small class="text-muted">Quantity: {{ qty.qty }}</small>
+                  </div>
+                  <span class="text-muted">₹{{ qty.product.price }}</span>
+                </li>
+                {% endfor %}
+                <li class="list-group-item d-flex justify-content-between lh-condensed">
+                        <div>
+                          <h6 class="my-0">Total</h6>
+                        </div>
+                        <span class="text-muted">₹{{ total }}</span>
+                </li>
+              </ul>
+              <!-- Cart -->
+    
+              <!-- Promo code -->
+              <div style="text-align: center">
+              <a class="btn aqua-gradient btn-lg" href="{% url 'pay' %}">PROCEED</a>
+              </div>
+              <!-- Promo code -->
+    
+            </div>
+            <!--Grid column-->
+    
+          </div>
+          <!--Grid row-->
+    
+        </div>
+      </main>
+      <!--Main layout-->
+    
+      <!--Footer-->
+      <footer class="page-footer text-center font-small mt-4 wow fadeIn">
+    
+        <!--Call to action-->
+
+        <!--/.Call to action-->
+    
+        <hr class="my-4">
+    
+        <!-- Social icons -->
+        <!-- Social icons -->
+    
+        <!--Copyright-->
+        <div class="footer-copyright py-3">
+          © 2019 Copyright:
+          <a href="https://mdbootstrap.com/education/bootstrap/" target="_blank"> MDBootstrap.com </a>
+        </div>
+        <!--/.Copyright-->
+    
+      </footer>
+
+{% endblock %}
